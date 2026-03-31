@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reddit-kb"
+version = "0.1.0"
+description = "DevOps Reddit ingest, theme extraction, embeddings, and query API"
+requires-python = ">=3.10"
+dependencies = [
+  "httpx>=0.27",
+  "pyyaml>=6",
+  "openai>=1.40",
+  "chromadb>=0.5",
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2",
+  "pydantic-settings>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+reddit-kb-ingest = "reddit_kb.cli:ingest_main"
+reddit-kb-themes = "reddit_kb.cli:themes_main"
+reddit-kb-embed = "reddit_kb.cli:embed_main"
+reddit-kb-eval = "reddit_kb.cli:eval_main"
+reddit-kb-api = "reddit_kb.cli:api_main"
+reddit-kb-query = "reddit_kb.cli:query_main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

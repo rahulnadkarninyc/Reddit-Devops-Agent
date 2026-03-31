@@ -1,0 +1,2 @@
+# Weekly refresh (adjust paths and user)
+# 0 6 * * 1 cd /path/to/Reddit-Devops-Agent && . .venv/bin/activate && reddit-kb-ingest && reddit-kb-themes && reddit-kb-embed

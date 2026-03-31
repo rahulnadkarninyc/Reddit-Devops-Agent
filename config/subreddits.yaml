@@ -1,0 +1,7 @@
+# Light ingest: five DevOps-adjacent communities (expand later as needed)
+subreddits:
+  - devops
+  - kubernetes
+  - docker
+  - terraform
+  - aws

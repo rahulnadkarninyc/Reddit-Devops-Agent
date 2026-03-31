@@ -1,0 +1,24 @@
+# Light ingest: small volume to avoid heavy Reddit use
+posts_per_subreddit: 3
+# Reddit "top" time window: hour | day | week | month | year | all
+time_filter: month
+# Fetch thread JSON for the first K posts per sub (see posts_with_comments_per_subreddit)
+include_comments: true
+# With 3 posts/sub, 3 = comments on every ingested post
+posts_with_comments_per_subreddit: 3
+# Highest-score comments per post after flattening the thread tree
+top_comments_per_post: 5
+# Max depth to walk nested replies (0 = top-level only)
+max_comment_depth: 6
+# Truncate each comment body for storage / LLM
+max_comment_chars: 500
+# Truncate selftext for LLM/theme stages (chars)
+max_selftext_chars: 8000
+# Delay between paginated public .json listing requests
+public_request_delay_sec: 2.0
+# Pause before each new subreddit (reduces burst 403s on public JSON)
+subreddit_delay_sec: 8
+# Delay between per-post thread fetches
+comment_fetch_delay_sec: 2.0
+# Initial comment page size (more-links skipped in v1); small is enough for top 5
+thread_json_limit: 80

@@ -1,0 +1,3 @@
+"""Reddit-backed DevOps community knowledge base pipeline."""
+
+__version__ = "0.1.0"
