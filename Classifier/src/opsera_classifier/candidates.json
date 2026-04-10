@@ -1,0 +1,22 @@
+[
+  {
+    "id": "t3_abc001",
+    "text": "How do I set up a CI/CD pipeline that works across Jenkins and GitHub Actions without duplicating config everywhere?"
+  },
+  {
+    "id": "t3_abc002",
+    "text": "What DORA metrics should I actually be tracking and how do I get my team to care about deployment frequency?"
+  },
+  {
+    "id": "t3_abc003",
+    "text": "We use 12 different DevOps tools and nobody has visibility into what's actually happening in our pipeline end to end."
+  },
+  {
+    "id": "t3_abc004",
+    "text": "How do you enforce security scanning gates in a pipeline without blocking every single deploy?"
+  },
+  {
+    "id": "t3_abc005",
+    "text": "What's the best way to present engineering velocity data to a non-technical board or VP?"
+  }
+]

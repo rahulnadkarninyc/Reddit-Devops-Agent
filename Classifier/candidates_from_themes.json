@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ci-pipeline-maintenance-6fb9535c",
+    "text": "CI Pipeline Maintenance Many teams struggle with maintaining CI pipelines due to duplicated configurations across multiple microservices. This leads to unmanageable complexity and inefficiencies. Example questions: How to avoid duplication?; Best practices for CI templates?; How to manage Jenkinsfiles?"
+  },
+  {
+    "id": "dns-issues-in-kubernetes-e4290dfd",
+    "text": "DNS Issues in Kubernetes Users face challenges with DNS timeouts in specific namespaces within Kubernetes clusters, often struggling to identify the root cause among various configurations and policies. Example questions: Why is DNS failing in one namespace?; How to troubleshoot CoreDNS?; What logs to check for DNS issues?"
+  },
+  {
+    "id": "terraform-state-management-69786213",
+    "text": "Terraform State Management Managing Terraform state can lead to complications, especially when state locks occur during operations. Users seek safe practices for force-unlocking state without risking corruption. Example questions: How to safely force-unlock Terraform?; What to do when state is locked?; Best practices for state management?"
+  },
+  {
+    "id": "cost-management-in-aws-cbff24ef",
+    "text": "Cost Management in AWS Unexpected costs from AWS services, such as NAT Gateways, are a common pain point. Users are looking for proactive measures to monitor and control these expenses. Example questions: How to monitor AWS costs?; What are effective cost alerts?; How to prevent surprise bills?"
+  },
+  {
+    "id": "docker-image-size-optimization-c317bebf",
+    "text": "Docker Image Size Optimization Developers are concerned about the size of Docker images, particularly when switching base images. They seek advice on balancing size and functionality without breaking dependencies. Example questions: How to reduce Docker image size?; Alpine vs distroless tradeoffs?; What are best practices for multi-stage builds?"
+  },
+  {
+    "id": "on-call-burnout-solutions-2a1a3669",
+    "text": "On-call Burnout Solutions On-call rotations can lead to burnout, especially when knowledge is concentrated among a few individuals. The community is looking for fair structuring and training solutions. Example questions: How to distribute on-call load?; What training helps reduce burnout?; How to improve on-call fairness?"
+  },
+  {
+    "id": "gitops-drift-management-cf226e8f",
+    "text": "GitOps Drift Management Balancing the need for quick fixes during incidents with the principles of GitOps is a challenge. Users seek strategies to manage drift while ensuring rapid recovery. Example questions: How to handle drift in GitOps?; What to do during emergency patches?; How to manage Argo CD sync?"
+  },
+  {
+    "id": "terraform-module-versioning-1c05b8e0",
+    "text": "Terraform Module Versioning Teams are divided on how to manage module versions in Terraform, with concerns about stability and discoverability. They seek clarity on the best practices for versioning. Example questions: How to version Terraform modules?; Semver vs SHA pinning pros and cons?; What are best practices for module updates?"
+  },
+  {
+    "id": "iam-policies-for-ci-cd-41f7d616",
+    "text": "IAM Policies for CI/CD Creating least privilege IAM policies for CI/CD processes is complex, especially when integrating with services like GitHub OIDC. Users are looking for concrete examples and best practices. Example questions: How to set up least privilege IAM?; What are examples of secure policies?; How to restrict OIDC permissions?"
+  },
+  {
+    "id": "rootless-docker-performance-bfdd3164",
+    "text": "Rootless Docker Performance The shift to rootless Docker for security reasons raises concerns about performance impacts. Users are looking for ways to mitigate these performance hits in CI environments. Example questions: Is rootless Docker worth it?; How to improve rootless build times?; What are alternatives to rootless Docker?"
+  },
+  {
+    "id": "secrets-management-in-kubernetes-7172df83",
+    "text": "Secrets Management in Kubernetes Managing secrets in Kubernetes can be overwhelming due to the variety of tools available. Users are seeking guidance on the best practices for secure and efficient secret management. Example questions: What is the best way to manage secrets?; How to choose between secret management tools?; What are GitOps-friendly secret solutions?"
+  },
+  {
+    "id": "custom-metrics-for-hpa-ac3ea1dc",
+    "text": "Custom Metrics for HPA Users encounter difficulties when implementing Horizontal Pod Autoscaler (HPA) with custom metrics, often struggling with configuration and data fetching issues. Example questions: Why is HPA not fetching metrics?; How to troubleshoot custom metrics?; What are common HPA configuration issues?"
+  },
+  {
+    "id": "multi-account-terraform-management-9fa9a68c",
+    "text": "Multi-Account Terraform Management Managing multiple AWS accounts with Terraform presents challenges in dependency management and state handling. Users are debating the merits of different approaches like Terragrunt versus native workspaces. Example questions: Terragrunt vs native workspaces?; How to manage dependencies in Terraform?; What is the best approach for multi-account setups?"
+  },
+  {
+    "id": "eks-upgrade-challenges-83b03db8",
+    "text": "EKS Upgrade Challenges Upgrading EKS versions often leads to issues with compatibility and deprecated APIs. Users seek shared experiences and checklists to navigate these upgrades successfully. Example questions: What breaks during EKS upgrades?; How to prepare for EKS upgrades?; What tools help with EKS compatibility?"
+  },
+  {
+    "id": "docker-compose-vs-kubernetes-f9c4066b",
+    "text": "Docker Compose vs Kubernetes Debates arise over the appropriateness of using Docker Compose versus Kubernetes for internal tools, with users weighing the trade-offs of complexity and capability. Example questions: When is Docker Compose enough?; What are the limits of Docker Compose?; How to decide between Compose and Kubernetes?"
+  },
+  {
+    "id": "measuring-dora-metrics-f16cabad",
+    "text": "Measuring DORA Metrics Organizations struggle with accurately measuring DORA metrics due to messy data sources. Users are looking for realistic approaches to track deployment frequency and incident response times. Example questions: What DORA metrics should we track?; How to clean up data for metrics?; What tools help with DORA measurement?"
+  }
+]

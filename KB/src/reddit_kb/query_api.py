@@ -12,6 +12,10 @@ from pydantic import BaseModel, Field
 from reddit_kb.embed_chroma import COLLECTION
 from reddit_kb.settings import Settings
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 log = logging.getLogger(__name__)
 
 
