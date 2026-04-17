@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opsera-generator"
+version = "0.1.0"
+description = "Opsera comment generator: action plan → Slack queue"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.40",
+  "pydantic>=2",
+  "pydantic-settings>=2",
+  "python-dotenv>=1.0",
+]
+
+[project.scripts]
+opsera-generate = "opsera_generator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,218 @@
+{
+  "selected_candidates": [
+    {
+      "id": "measuring-dora-metrics-f16cabad",
+      "top_hits": [
+        {
+          "chunk_id": "f6a6a043dd44f57aab15deb8b8af5f565fcb5910a0cc0fc2b82ae6d2caa4a218",
+          "source_path": "tech/dora_metrics.md",
+          "text": "# DORA Metrics\n\n## Overview\n\nOpsera measures all four DORA (DevOps Research and Assessment) metrics — Deployment Frequency, Lead Time for Changes, Change Failure Rate, and Mean Time to Recovery — by aggregating data directly from the tools in an organization's existing toolchain. No manual data entry, no spreadsheet exports. The metrics are computed from live, source-of-truth data.\n\nEngineering leaders use these dashboards to identify process bottlenecks, benchmark team performance over time, and report software delivery health to executive stakeholders.\n\n## Data Collection\n\nOpsera pulls DORA metric data from connected tools using its integration layer:",
+          "doc_type": "tech",
+          "distance": 0.5028010606765747,
+          "similarity": 0.6654240712006092
+        },
+        {
+          "chunk_id": "52c8041a75b7ee7865558d50b9cddd0356eeaf4c92049f8988dca2305f2328d3",
+          "source_path": "tech/dora_metrics.md",
+          "text": "## Data Collection\n\nOpsera pulls DORA metric data from connected tools using its integration layer:\n\n- **Deployment events** come from CI/CD tools (Jenkins, GitHub Actions, GitLab CI) and deployment targets (Kubernetes, AWS CodeDeploy, Harness, Spinnaker). A \"deployment\" is defined as a successful execution of a deploy step to a production or production-equivalent environment.\n- **Commit and PR data** comes from source control systems (GitHub, GitLab, Bitbucket) and is used to calculate Lead Time — the elapsed time from first commit to production deployment.\n- **Incident and failure data** comes from incident management tools (PagerDuty, OpsGenie) and ticketing systems (Jira, ServiceNow) to calculate Change Failure Rate and MTTR.\n\nOpsera normalizes these signals across tools and applies configurable rules to define what counts as a production environment, what constitutes a \"failure,\" and how work items map to deployments.\n\n## The Four Metrics",
+          "doc_type": "tech",
+          "distance": 0.7116948366165161,
+          "similarity": 0.5842162858752827
+        },
+        {
+          "chunk_id": "bf619922e43d26eeff17aa5ab5c4c79944549cae6e5bcb665859777a5ca7f346",
+          "source_path": "tech/dora_metrics.md",
+          "text": "## Dashboards and Views\n\nThe DORA dashboard provides:\n\n- **Executive summary view**: A single-screen snapshot of all four metrics vs. DORA performance bands (Elite, High, Medium, Low), designed for board-level or all-hands reporting.\n- **Team-level drill-down**: Individual team scorecards showing metric trends, with the ability to compare teams or filter by service area.\n- **Pipeline attribution**: Tracing which specific pipelines or repositories are contributing to failures or long lead times.\n- **Trend analysis**: Week-over-week and quarter-over-quarter views to surface whether initiatives (new tools, process changes) are moving metrics in the right direction.\n\n## How Leaders Use It\n\nEngineering leaders use DORA dashboards in several recurring workflows:",
+          "doc_type": "tech",
+          "distance": 0.7168105244636536,
+          "similarity": 0.5824754600175862
+        },
+        {
+          "chunk_id": "fbbd5049d6de32f4d66e54467a9c13c7f195dcc8ab9667c6391cb3d9aa5c5fc5",
+          "source_path": "tech/dora_metrics.md",
+          "text": "## The Four Metrics\n\n**Deployment Frequency**: How often a team deploys to production. Opsera surfaces this at team, service, and org level, with trend lines over 7/30/90-day windows. Teams can filter by environment, pipeline, or repository.\n\n**Lead Time for Changes**: The time from a commit being merged to that commit reaching production. Opsera traces the full commit-to-deploy chain across source control and CI/CD tools, calculating median and 95th-percentile lead times.\n\n**Change Failure Rate**: The percentage of deployments that result in a degraded production state requiring a hotfix, rollback, or incident. Opsera correlates deployment events with incident records to compute this automatically.\n\n**Mean Time to Recovery (MTTR)**: How long it takes to restore service after a failure. Calculated as the time between incident creation and resolution, linked to the affected service and deployment.\n\n## Dashboards and Views\n\nThe DORA dashboard provides:",
+          "doc_type": "tech",
+          "distance": 0.7184061408042908,
+          "similarity": 0.5819346057108219
+        },
+        {
+          "chunk_id": "5ead19ad0e257614bbdf9bd06fd41168647d0287dd007c7656501bbe1f0be712",
+          "source_path": "tech/dora_metrics.md",
+          "text": "## How Leaders Use It\n\nEngineering leaders use DORA dashboards in several recurring workflows:\n\n- **Engineering reviews**: Monthly or quarterly reviews where VPs of Engineering present delivery performance to peers or the CEO.\n- **Bottleneck identification**: When lead time increases, drill-down views help attribute the slowdown to a specific team, pipeline stage, or tool integration.\n- **Incident retrospectives**: MTTR data tied to specific deployments and teams informs where reliability improvements are most needed.\n- **Headcount and tooling decisions**: Sustained low deployment frequency in a team can be a signal of tooling debt, team capacity issues, or process overhead worth investigating.",
+          "doc_type": "tech",
+          "distance": 0.7889442443847656,
+          "similarity": 0.5589889137902725
+        },
+        {
+          "chunk_id": "8b7ffc126c63b4555a3872c50b4013f2bb4f91664a064afe49e8e3e502828df5",
+          "source_path": "messaging/devops_leader_pitch.md",
+          "text": "These aren't vanity metrics when they're grounded in real toolchain data. Opsera's DORA dashboards are built to be read by a VP of Engineering in a board prep session, not just by a DevOps engineer debugging a pipeline.\n\n## Why Evaluate Now\n\nThe cost of toolchain fragmentation compounds over time. Every new team that joins the org and builds their own pipeline conventions increases the surface area of inconsistency. Every compliance audit that requires manual evidence collection is weeks of engineering time that could have been automated.\n\nOpsera's implementation model is designed to deliver value without a rip-and-replace. Existing tools stay in place. Opsera connects above them. Most customers see their first DORA dashboard populated within days of onboarding, and pipeline templates in production within the first few weeks.\n\nThe right time to build a unified delivery platform is before the complexity becomes a crisis.",
+          "doc_type": "messaging",
+          "distance": 0.8857560157775879,
+          "similarity": 0.5302912951799079
+        },
+        {
+          "chunk_id": "5b71fbaccb32d88c2d168f629f3375f772c98fd66e0f7732851c7c1e8ce2647c",
+          "source_path": "tech/tool_chain_integration.md",
+          "text": "## How Data Normalization Works\n\nEach tool exposes data through its own schema and API conventions. A \"deployment\" in Jenkins looks structurally different from a \"release\" in GitHub Actions or a \"run\" in CircleCI. Opsera maps these tool-specific concepts to a normalized internal data model that includes:\n\n- **Pipeline Run**: a single execution of a delivery workflow, with status, timestamps, environment target, and triggering event\n- **Change**: a code commit or PR, linked to a pipeline run and a work item\n- **Deployment Event**: a production-environment pipeline run, used to compute DORA metrics\n- **Incident**: a failure event from an incident management tool, correlated to a deployment\n\nThis normalized layer is what powers cross-tool analytics. When a VP looks at lead time, they're seeing a metric computed across GitHub PR data, Jenkins build history, and Kubernetes deploy records — unified through Opsera's data model.\n\n## Common Integration Pain Points Solved",
+          "doc_type": "tech",
+          "distance": 1.122969150543213,
+          "similarity": 0.47103840380540896
+        },
+        {
+          "chunk_id": "43c7a87868db4c704f702f5f9f53c8404bd56d1757ee28e84d02c85af71b2850",
+          "source_path": "messaging/devops_leader_pitch.md",
+          "text": "## What Changes When You Deploy Opsera\n\n**Deployment frequency goes up** because teams spend less time maintaining pipeline glue code and more time shipping. No-code pipeline templates mean new services are production-ready from day one, and changes to delivery workflows don't require a sprint of infrastructure work.\n\n**Lead time comes down** because bottlenecks become visible. Opsera's DORA dashboards show exactly where time is being lost in the commit-to-production chain — whether it's a slow test suite, a manual approval step that takes 48 hours, or a flaky deployment that requires repeated retries. Once the bottleneck is visible, it can be addressed.\n\n**Change failure rate drops** because security and quality gates are consistently enforced. When every pipeline runs SonarQube and Snyk before deployment — not by convention but by platform enforcement — the category of failures caused by known vulnerabilities and quality regressions is eliminated.",
+          "doc_type": "messaging",
+          "distance": 1.1466662883758545,
+          "similarity": 0.46583859140797784
+        }
+      ],
+      "text": "Measuring DORA Metrics Organizations struggle with accurately measuring DORA metrics due to messy data sources. Users are looking for realistic approaches to track deployment frequency and incident response times. Example questions: What DORA metrics should we track?; How to clean up data for metrics?; What tools help with DORA measurement?",
+      "similarity": 0.5550259533734834
+    },
+    {
+      "id": "ci-pipeline-maintenance-6fb9535c",
+      "top_hits": [
+        {
+          "chunk_id": "0fc7e9013bf5cbc8e5c539ff73bcf2292f1bd58de922c1c76cbb3941c6436734",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "## Reusable Templates\n\nPlatform teams can publish **pipeline blueprints** — parameterized templates for common delivery patterns (e.g., \"Java microservice to EKS\", \"Terraform infrastructure change with approval gate\"). Product squads instantiate these templates and fill in project-specific values. This allows centralized governance without centralized execution bottlenecks.",
+          "doc_type": "product",
+          "distance": 0.9138897657394409,
+          "similarity": 0.5224961321707288
+        },
+        {
+          "chunk_id": "49615844a5ae0242fa8792a60f610e28b17923f92a8f38969d7bf3a288ea5221",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "Pipelines are built from **workflow steps**, each representing an action in a connected tool:\n\n- **Source control steps**: clone a repo, trigger on push/PR events from GitHub, GitLab, or Bitbucket\n- **Build steps**: invoke a Jenkins job, run a GitHub Actions workflow, or execute a Maven/Gradle build\n- **Test steps**: run unit tests, integration tests, or quality gate checks via SonarQube\n- **Security steps**: trigger SAST scans (Sonar, Checkmarx), dependency checks (Snyk, OWASP), or container scans (Anchore)\n- **Deploy steps**: apply Terraform plans, deploy to Kubernetes clusters, or push to AWS/Azure/GCP environments\n- **Notification steps**: post results to Slack, create Jira tickets on failure, or update ServiceNow change records",
+          "doc_type": "product",
+          "distance": 0.920468807220459,
+          "similarity": 0.5207061922798549
+        },
+        {
+          "chunk_id": "c2c09de26904ef1b92d7110d73eb1fe130617d8c040ea0d5855e644be9fe8777",
+          "source_path": "tech/tool_chain_integration.md",
+          "text": "## Common Integration Pain Points Solved\n\n**\"We can't get a single view of what's in production\"**: When deployment data lives in five different CI/CD tools and three cloud consoles, there's no reliable answer to \"what version of service X is running in prod right now?\" Opsera's deployment event model provides a unified deployment registry across tools.\n\n**\"Every team's pipeline is different, and we can't enforce standards\"**: Because Opsera sits above the CI/CD layer, it can apply consistent pre/post conditions (security scans, approval gates) to pipelines regardless of which underlying tool is executing them.\n\n**\"Connecting a new tool breaks everything downstream\"**: Opsera's integration model is additive — connecting a new tool enriches the existing data model rather than requiring reconfiguration. Adding Snyk to an existing pipeline with GitHub and Jenkins does not require changes to the GitHub or Jenkins integrations.",
+          "doc_type": "tech",
+          "distance": 0.9601263999938965,
+          "similarity": 0.5101711807989086
+        },
+        {
+          "chunk_id": "5776e285a6d18c7bd0b43953fd1bb12db6028b6e662406ec04bfc87632a5b8d4",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "**Inconsistent standards across teams**: Platform teams frequently struggle to enforce pipeline standards (required security scans, mandatory quality gates, approval steps) across dozens of product squads. Opsera supports **pipeline templates** — reusable, organization-approved workflow patterns that can be published and enforced org-wide while still allowing per-project parameterization.\n\n**Tool migration friction**: When an org moves from Jenkins to GitHub Actions, or adds Terraform to an existing workflow, re-wiring pipelines is labor-intensive. Because Opsera abstracts the tool layer, swapping or adding a step is a configuration change rather than a code rewrite.\n\n**Audit readiness**: Opsera logs every pipeline execution with full step-level detail — what ran, what the inputs and outputs were, which credentials were used, and what the outcome was. This execution history is queryable and exportable, which significantly reduces the manual effort involved in audit prep.",
+          "doc_type": "product",
+          "distance": 0.9984206557273865,
+          "similarity": 0.500395148105602
+        },
+        {
+          "chunk_id": "9cc5d49504773d48c3bb339004b78228cf09d4e868dbedf29b345a727af43762",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "Steps are arranged in a visual DAG (directed acyclic graph) editor. Conditional branching, parallel execution paths, and approval gates can be inserted between steps without code. Each step's configuration is stored as a versioned record — changes are tracked, diffable, and rollback-able.\n\n## Pain Points It Solves\n\n**Glue code sprawl**: In most organizations, CI/CD pipelines accumulate custom shell scripts and wrapper code that no one fully owns. When the engineer who wrote the pipeline leaves, the org is left with undocumented automation. Opsera replaces that with declarative, UI-configured workflows that any team member can inspect and modify.",
+          "doc_type": "product",
+          "distance": 1.006919503211975,
+          "similarity": 0.498276088502578
+        },
+        {
+          "chunk_id": "55d7d55d1b4dddd98db18d66fe4d41a91bee744870bd87437638389780ec75f8",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "# Pipeline Orchestration\n\n## Overview\n\nOpsera's no-code pipeline orchestration engine lets teams design, deploy, and manage CI/CD workflows through a visual interface — without writing infrastructure glue code. Engineers select tools from a library of pre-built integrations (Jenkins, GitHub Actions, Terraform, SonarQube, Anchore, Twistlock, and others), configure their parameters, and connect them in a directed workflow graph. Opsera handles the underlying API calls, credential management, and execution sequencing.\n\nThe result is a pipeline that is reproducible, auditable, and modifiable without touching YAML or Groovy scripts.\n\n## How It Works\n\nPipelines are built from **workflow steps**, each representing an action in a connected tool:",
+          "doc_type": "product",
+          "distance": 1.0279784202575684,
+          "similarity": 0.4931018939900714
+        },
+        {
+          "chunk_id": "7bb5597543e8c8438b6d0b747d29b3ba5e36cd7ab06bafcee876b00a92ed7a31",
+          "source_path": "product/product_overview.md",
+          "text": "## The Problem It Solves\n\nEngineering teams at mid-to-large companies typically operate with 10–20+ DevOps tools that were adopted independently by different teams or acquired through M&A. Each tool has its own API, data model, and reporting surface. This creates three recurring problems:\n\n1. **Pipeline fragmentation** — Teams write custom scripts and Groovy/YAML glue code to string tools together. This code is brittle, undocumented, and impossible to audit.\n2. **Metric blindness** — Engineering leaders have no reliable view into deployment frequency, lead time, or failure rates because the data lives in disconnected silos.\n3. **Compliance gaps** — Security and policy checks are inconsistently applied across pipelines. Audit prep is manual and error-prone.\n\nOpsera addresses all three through a unified data layer and a no-code workflow engine.\n\n## Who Uses It",
+          "doc_type": "product",
+          "distance": 1.076218605041504,
+          "similarity": 0.48164485067795154
+        },
+        {
+          "chunk_id": "8f56faf835e1ec9a52db64a12edce589905a09f0ec223a74986832acb82ba21b",
+          "source_path": "product/product_overview.md",
+          "text": "## Who Uses It\n\n- **Platform engineering teams** who own the internal developer platform and need to standardize CI/CD across the org without mandating a single toolchain.\n- **DevOps engineers** who build and maintain pipelines and want reusable, auditable workflow templates.\n- **VPs of Engineering and CTOs** who need engineering performance data to make staffing, tooling, and process decisions — and to report upward to the board.\n- **Security and compliance leads** who need evidence that policy gates are being enforced consistently across all delivery pipelines.\n\n## Differentiation\n\n**vs. LinearB and Jellyfish**: Both are strong on engineering analytics but have no pipeline orchestration capability. They tell you what's happening; they don't help you change it. Opsera closes that loop — you can identify a bottleneck in your lead time dashboard and immediately act on it within the same platform.",
+          "doc_type": "product",
+          "distance": 1.0792441368103027,
+          "similarity": 0.48094400378306024
+        }
+      ],
+      "text": "CI Pipeline Maintenance Many teams struggle with maintaining CI pipelines due to duplicated configurations across multiple microservices. This leads to unmanageable complexity and inefficiencies. Example questions: How to avoid duplication?; Best practices for CI templates?; How to manage Jenkinsfiles?",
+      "similarity": 0.5009669362885945
+    },
+    {
+      "id": "iam-policies-for-ci-cd-41f7d616",
+      "top_hits": [
+        {
+          "chunk_id": "f40fa390bced11de4c8f4208adb529d39d26a0d18483786790a25ecacfa2aaa6",
+          "source_path": "tech/tool_chain_integration.md",
+          "text": "**\"Audit prep takes two weeks\"**: Compliance auditors typically need evidence that specific controls were applied to all production deployments during an audit period. Because Opsera logs all pipeline executions with tool, step, credential, and outcome data in a normalized format, generating this evidence is a query rather than a manual process.\n\n## Credential and Access Management\n\nOpsera supports OAuth 2.0, API token, SSH key, and service account authentication methods depending on the tool. Credentials are encrypted at rest and accessed via Opsera's secrets manager. Teams can scope tool connections to specific projects or repositories, and connection health is monitored with alerting on auth failures or API rate limit breaches.",
+          "doc_type": "tech",
+          "distance": 1.208644151687622,
+          "similarity": 0.4527664627350229
+        },
+        {
+          "chunk_id": "cdc21de0a537c8542857e80146a9d368e748693629ef2e043d6131fe67188da4",
+          "source_path": "tech/security_and_compliance.md",
+          "text": "**FedRAMP**: Pipeline audit logs showing that FIPS-compliant tooling was used, access was scoped appropriately, and all deployments to federal environments were authorized and traceable.\n\n**HIPAA / PCI-DSS**: Evidence of access controls, encryption-in-transit validation in deployment steps, and logging of all credential usage.\n\nReports can be scoped to a time range, a set of pipelines, or a specific environment. They are exportable as PDF or structured JSON for submission to auditors or ingestion into GRC tools.\n\n## Who Cares About This\n\n**Security engineering teams** use Opsera to enforce scanning requirements across all pipelines org-wide, without needing to review and approve each team's pipeline configuration manually.\n\n**Platform engineering teams** use it to publish pipeline templates with security gates pre-embedded, so that new services automatically inherit compliant delivery workflows from day one.",
+          "doc_type": "tech",
+          "distance": 1.2402849197387695,
+          "similarity": 0.4463717945825417
+        },
+        {
+          "chunk_id": "49615844a5ae0242fa8792a60f610e28b17923f92a8f38969d7bf3a288ea5221",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "Pipelines are built from **workflow steps**, each representing an action in a connected tool:\n\n- **Source control steps**: clone a repo, trigger on push/PR events from GitHub, GitLab, or Bitbucket\n- **Build steps**: invoke a Jenkins job, run a GitHub Actions workflow, or execute a Maven/Gradle build\n- **Test steps**: run unit tests, integration tests, or quality gate checks via SonarQube\n- **Security steps**: trigger SAST scans (Sonar, Checkmarx), dependency checks (Snyk, OWASP), or container scans (Anchore)\n- **Deploy steps**: apply Terraform plans, deploy to Kubernetes clusters, or push to AWS/Azure/GCP environments\n- **Notification steps**: post results to Slack, create Jira tickets on failure, or update ServiceNow change records",
+          "doc_type": "product",
+          "distance": 1.2718915939331055,
+          "similarity": 0.4401618469254499
+        },
+        {
+          "chunk_id": "f524ff74e19b553efcfa6b7ac7ec0ff0254b1e9ea6c3d4523a0f28f9b43be1ba",
+          "source_path": "tech/security_and_compliance.md",
+          "text": "# Security and Compliance\n\n## Overview\n\nOpsera embeds security and compliance controls directly into the software delivery pipeline rather than treating them as a post-delivery audit function. Engineering teams configure security gates as required pipeline steps; the platform enforces them on every run and logs the evidence. The result is a continuous, auditable record that controls were applied consistently — not just attested to.\n\nThis capability matters most to organizations operating under formal compliance frameworks (SOC 2, FedRAMP, HIPAA, PCI-DSS) and to security-conscious engineering orgs that need to demonstrate governance to customers, partners, or regulators.\n\n## Security Gates in Pipelines\n\nOpsera supports configurable **security gates** — pipeline steps that must pass before execution continues to the next stage. If a gate fails, the pipeline halts and the deployment does not proceed. Gates can be configured as:",
+          "doc_type": "tech",
+          "distance": 1.2725887298583984,
+          "similarity": 0.4400268235345462
+        },
+        {
+          "chunk_id": "9cc5d49504773d48c3bb339004b78228cf09d4e868dbedf29b345a727af43762",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "Steps are arranged in a visual DAG (directed acyclic graph) editor. Conditional branching, parallel execution paths, and approval gates can be inserted between steps without code. Each step's configuration is stored as a versioned record — changes are tracked, diffable, and rollback-able.\n\n## Pain Points It Solves\n\n**Glue code sprawl**: In most organizations, CI/CD pipelines accumulate custom shell scripts and wrapper code that no one fully owns. When the engineer who wrote the pipeline leaves, the org is left with undocumented automation. Opsera replaces that with declarative, UI-configured workflows that any team member can inspect and modify.",
+          "doc_type": "product",
+          "distance": 1.2759901285171509,
+          "similarity": 0.43936921670724394
+        },
+        {
+          "chunk_id": "fbef330e38ea0216a38fbc89d1c980fde7d20a79554ebdaadaa4b1b57a7ab34c",
+          "source_path": "tech/security_and_compliance.md",
+          "text": "**Container and Infrastructure Scanning**:\n- Anchore and Aqua Security — image scanning before container deployment\n- OWASP Dependency-Check — CVE detection in third-party libraries\n- Terraform plan analysis for infrastructure misconfigurations (via Checkov or Terrascan integrations)\n\nEach scan step is configured with a severity threshold. A pipeline step running Snyk can be configured to fail if any `CRITICAL` severity CVE is found, or to warn but continue for `HIGH` severities, depending on team policy.\n\n## Compliance Reporting\n\nOpsera generates compliance evidence reports that map pipeline execution history to the control requirements of specific frameworks:\n\n**SOC 2**: Evidence that change management controls were followed — every production deployment went through defined stages, was approved by authorized personnel, and had associated test and security scan results.",
+          "doc_type": "tech",
+          "distance": 1.29267418384552,
+          "similarity": 0.4361718760764743
+        },
+        {
+          "chunk_id": "5776e285a6d18c7bd0b43953fd1bb12db6028b6e662406ec04bfc87632a5b8d4",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "**Inconsistent standards across teams**: Platform teams frequently struggle to enforce pipeline standards (required security scans, mandatory quality gates, approval steps) across dozens of product squads. Opsera supports **pipeline templates** — reusable, organization-approved workflow patterns that can be published and enforced org-wide while still allowing per-project parameterization.\n\n**Tool migration friction**: When an org moves from Jenkins to GitHub Actions, or adds Terraform to an existing workflow, re-wiring pipelines is labor-intensive. Because Opsera abstracts the tool layer, swapping or adding a step is a configuration change rather than a code rewrite.\n\n**Audit readiness**: Opsera logs every pipeline execution with full step-level detail — what ran, what the inputs and outputs were, which credentials were used, and what the outcome was. This execution history is queryable and exportable, which significantly reduces the manual effort involved in audit prep.",
+          "doc_type": "product",
+          "distance": 1.3026444911956787,
+          "similarity": 0.43428327899663605
+        },
+        {
+          "chunk_id": "55d7d55d1b4dddd98db18d66fe4d41a91bee744870bd87437638389780ec75f8",
+          "source_path": "product/pipeline_orchestration.md",
+          "text": "# Pipeline Orchestration\n\n## Overview\n\nOpsera's no-code pipeline orchestration engine lets teams design, deploy, and manage CI/CD workflows through a visual interface — without writing infrastructure glue code. Engineers select tools from a library of pre-built integrations (Jenkins, GitHub Actions, Terraform, SonarQube, Anchore, Twistlock, and others), configure their parameters, and connect them in a directed workflow graph. Opsera handles the underlying API calls, credential management, and execution sequencing.\n\nThe result is a pipeline that is reproducible, auditable, and modifiable without touching YAML or Groovy scripts.\n\n## How It Works\n\nPipelines are built from **workflow steps**, each representing an action in a connected tool:",
+          "doc_type": "product",
+          "distance": 1.3148295879364014,
+          "similarity": 0.4319972429985522
+        }
+      ],
+      "text": "IAM Policies for CI/CD Creating least privilege IAM policies for CI/CD processes is complex, especially when integrating with services like GitHub OIDC. Users are looking for concrete examples and best practices. Example questions: How to set up least privilege IAM?; What are examples of secure policies?; How to restrict OIDC permissions?",
+      "similarity": 0.44014356781955843
+    }
+  ],
+  "timestamp": "2026-04-06T21:15:58.648872Z"
+}

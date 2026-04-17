@@ -1,278 +1,278 @@
 {
-  "taxonomy_version": "20260406T211357Z",
+  "taxonomy_version": "20260410T180604Z",
   "prompt_hash": "6d1429dfe85de80a",
   "theme_count": 16,
   "themes": [
     {
-      "theme_id": "ci-pipeline-maintenance-6fb9535c",
-      "theme_label": "CI Pipeline Maintenance",
-      "description": "Many teams struggle with maintaining CI pipelines due to duplicated configurations across multiple microservices. This leads to unmanageable complexity and inefficiencies.",
+      "theme_id": "ci-pipeline-maintainability-6ecbeea9",
+      "theme_label": "CI pipeline maintainability",
+      "description": "Many teams struggle with maintaining CI pipelines due to duplication and complexity, especially when using tools like Jenkins. There is a strong interest in finding patterns and best practices to streamline these processes.",
       "pain_point_type": "process",
       "example_question_phrases": [
         "How to avoid duplication?",
         "Best practices for CI templates?",
-        "How to manage Jenkinsfiles?",
-        "What tools help with CI maintenance?"
+        "What tools can simplify pipelines?",
+        "How to manage microservices CI?"
       ],
       "confidence": 0.9,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "dns-issues-in-kubernetes-e4290dfd",
-      "theme_label": "DNS Issues in Kubernetes",
-      "description": "Users face challenges with DNS timeouts in specific namespaces within Kubernetes clusters, often struggling to identify the root cause among various configurations and policies.",
+      "theme_id": "kubernetes-dns-issues-ca0af941",
+      "theme_label": "Kubernetes DNS issues",
+      "description": "Users frequently encounter DNS resolution problems in Kubernetes, particularly when specific namespaces experience timeouts. The community seeks guidance on troubleshooting and resolving these issues effectively.",
       "pain_point_type": "incident",
       "example_question_phrases": [
         "Why is DNS failing in one namespace?",
-        "How to troubleshoot CoreDNS?",
+        "How to debug CoreDNS timeouts?",
         "What logs to check for DNS issues?",
-        "Are there namespace-specific settings?"
+        "Namespace-specific DNS troubleshooting tips?"
       ],
       "confidence": 0.85,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "terraform-state-management-69786213",
-      "theme_label": "Terraform State Management",
-      "description": "Managing Terraform state can lead to complications, especially when state locks occur during operations. Users seek safe practices for force-unlocking state without risking corruption.",
+      "theme_id": "terraform-state-management-b730e835",
+      "theme_label": "Terraform state management",
+      "description": "Managing Terraform state, especially during failures, is a common pain point. Users are concerned about safely unlocking state files and avoiding corruption, leading to discussions about best practices and runbooks.",
       "pain_point_type": "process",
       "example_question_phrases": [
-        "How to safely force-unlock Terraform?",
+        "How to safely force-unlock Terraform state?",
         "What to do when state is locked?",
         "Best practices for state management?",
-        "How to avoid state corruption?"
+        "How to prevent state corruption?"
       ],
       "confidence": 0.8,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "cost-management-in-aws-cbff24ef",
-      "theme_label": "Cost Management in AWS",
-      "description": "Unexpected costs from AWS services, such as NAT Gateways, are a common pain point. Users are looking for proactive measures to monitor and control these expenses.",
+      "theme_id": "unexpected-cloud-costs-6b5d7616",
+      "theme_label": "Unexpected cloud costs",
+      "description": "Surprise costs from cloud services, such as NAT Gateway charges, are a significant concern for teams. Users are looking for strategies to monitor and control these expenses proactively.",
       "pain_point_type": "cost",
       "example_question_phrases": [
-        "How to monitor AWS costs?",
-        "What are effective cost alerts?",
-        "How to prevent surprise bills?",
-        "Best practices for VPC endpoints?"
+        "How to monitor cloud egress costs?",
+        "What tools help prevent unexpected bills?",
+        "Best practices for cost management?",
+        "How to set up alerts for cloud spending?"
       ],
       "confidence": 0.9,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "docker-image-size-optimization-c317bebf",
-      "theme_label": "Docker Image Size Optimization",
-      "description": "Developers are concerned about the size of Docker images, particularly when switching base images. They seek advice on balancing size and functionality without breaking dependencies.",
+      "theme_id": "docker-image-size-optimization-10f79390",
+      "theme_label": "Docker image size optimization",
+      "description": "Developers are often challenged with large Docker images and seek advice on optimizing them. The community discusses trade-offs between different base images and strategies for reducing size without breaking functionality.",
       "pain_point_type": "tooling",
       "example_question_phrases": [
         "How to reduce Docker image size?",
-        "Alpine vs distroless tradeoffs?",
-        "What are best practices for multi-stage builds?",
-        "How to audit Docker layers?"
+        "Alpine vs distroless for images?",
+        "Best practices for multi-stage builds?",
+        "What tools help analyze image layers?"
       ],
       "confidence": 0.75,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "on-call-burnout-solutions-2a1a3669",
-      "theme_label": "On-call Burnout Solutions",
-      "description": "On-call rotations can lead to burnout, especially when knowledge is concentrated among a few individuals. The community is looking for fair structuring and training solutions.",
+      "theme_id": "on-call-burnout-management-07db11d9",
+      "theme_label": "On-call burnout management",
+      "description": "On-call rotations can lead to burnout, especially when workload is unevenly distributed. The community is looking for fair structuring methods and strategies to alleviate stress and improve coverage.",
       "pain_point_type": "process",
       "example_question_phrases": [
-        "How to distribute on-call load?",
-        "What training helps reduce burnout?",
-        "How to improve on-call fairness?",
-        "What policies help manage alerts?"
+        "How to balance on-call load?",
+        "What models reduce burnout?",
+        "Best practices for on-call rotations?",
+        "How to train backups for on-call?"
       ],
-      "confidence": 0.9,
+      "confidence": 0.85,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "gitops-drift-management-cf226e8f",
-      "theme_label": "GitOps Drift Management",
-      "description": "Balancing the need for quick fixes during incidents with the principles of GitOps is a challenge. Users seek strategies to manage drift while ensuring rapid recovery.",
+      "theme_id": "gitops-drift-management-87ce1cbf",
+      "theme_label": "GitOps drift management",
+      "description": "Balancing the need for quick fixes during incidents with maintaining GitOps principles is a common dilemma. Users are seeking practical solutions for managing drift while ensuring rapid recovery.",
       "pain_point_type": "process",
       "example_question_phrases": [
         "How to handle drift in GitOps?",
         "What to do during emergency patches?",
-        "How to manage Argo CD sync?",
-        "Best practices for incident response?"
+        "Best practices for Argo CD drift?",
+        "How to manage hotfixes in GitOps?"
       ],
       "confidence": 0.8,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "terraform-module-versioning-1c05b8e0",
-      "theme_label": "Terraform Module Versioning",
-      "description": "Teams are divided on how to manage module versions in Terraform, with concerns about stability and discoverability. They seek clarity on the best practices for versioning.",
+      "theme_id": "terraform-module-versioning-e4e56b0b",
+      "theme_label": "Terraform module versioning",
+      "description": "Teams face challenges with versioning Terraform modules, particularly when it comes to managing dependencies and avoiding breaking changes. Discussions revolve around the pros and cons of different versioning strategies.",
       "pain_point_type": "process",
       "example_question_phrases": [
         "How to version Terraform modules?",
-        "Semver vs SHA pinning pros and cons?",
-        "What are best practices for module updates?",
-        "How to ensure reproducibility in Terraform?"
+        "Semver vs SHA pinning for modules?",
+        "What are the risks of module pinning?",
+        "Best practices for module updates?"
       ],
       "confidence": 0.75,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "iam-policies-for-ci-cd-41f7d616",
-      "theme_label": "IAM Policies for CI/CD",
-      "description": "Creating least privilege IAM policies for CI/CD processes is complex, especially when integrating with services like GitHub OIDC. Users are looking for concrete examples and best practices.",
+      "theme_id": "aws-iam-policy-management-680a60aa",
+      "theme_label": "AWS IAM policy management",
+      "description": "Creating least privilege IAM policies for CI/CD pipelines is a complex task. Users are looking for concrete examples and best practices to tighten their security without hindering functionality.",
       "pain_point_type": "security",
       "example_question_phrases": [
-        "How to set up least privilege IAM?",
-        "What are examples of secure policies?",
-        "How to restrict OIDC permissions?",
-        "Best practices for AWS IAM roles?"
+        "How to implement least privilege in IAM?",
+        "What are examples of tight IAM policies?",
+        "Best practices for GitHub OIDC roles?",
+        "How to restrict S3 access effectively?"
       ],
       "confidence": 0.8,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "rootless-docker-performance-bfdd3164",
-      "theme_label": "Rootless Docker Performance",
-      "description": "The shift to rootless Docker for security reasons raises concerns about performance impacts. Users are looking for ways to mitigate these performance hits in CI environments.",
+      "theme_id": "rootless-docker-performance-fdb96174",
+      "theme_label": "Rootless Docker performance",
+      "description": "The shift to rootless Docker builds raises concerns about performance impacts. Users are exploring ways to mitigate these issues while adhering to security requirements.",
       "pain_point_type": "tooling",
       "example_question_phrases": [
         "Is rootless Docker worth it?",
         "How to improve rootless build times?",
         "What are alternatives to rootless Docker?",
-        "How to balance security and performance?"
+        "Best practices for CI with rootless Docker?"
       ],
       "confidence": 0.7,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "secrets-management-in-kubernetes-7172df83",
-      "theme_label": "Secrets Management in Kubernetes",
-      "description": "Managing secrets in Kubernetes can be overwhelming due to the variety of tools available. Users are seeking guidance on the best practices for secure and efficient secret management.",
+      "theme_id": "secrets-management-in-kubernetes-308a9264",
+      "theme_label": "Secrets management in Kubernetes",
+      "description": "Managing secrets in Kubernetes, especially in a GitOps context, presents various challenges. The community is overwhelmed by options and seeks guidance on the best tools and practices.",
       "pain_point_type": "security",
       "example_question_phrases": [
         "What is the best way to manage secrets?",
-        "How to choose between secret management tools?",
-        "What are GitOps-friendly secret solutions?",
-        "How to ensure audit trails for secrets?"
-      ],
-      "confidence": 0.85,
-      "source_post_ids": [],
-      "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
-      "prompt_hash": "6d1429dfe85de80a"
-    },
-    {
-      "theme_id": "custom-metrics-for-hpa-ac3ea1dc",
-      "theme_label": "Custom Metrics for HPA",
-      "description": "Users encounter difficulties when implementing Horizontal Pod Autoscaler (HPA) with custom metrics, often struggling with configuration and data fetching issues.",
-      "pain_point_type": "incident",
-      "example_question_phrases": [
-        "Why is HPA not fetching metrics?",
-        "How to troubleshoot custom metrics?",
-        "What are common HPA configuration issues?",
-        "How to ensure metric normalization?"
+        "External Secrets vs Vault for Kubernetes?",
+        "How to ensure audit trails for secrets?",
+        "Best practices for GitOps-friendly secrets?"
       ],
       "confidence": 0.75,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "multi-account-terraform-management-9fa9a68c",
-      "theme_label": "Multi-Account Terraform Management",
-      "description": "Managing multiple AWS accounts with Terraform presents challenges in dependency management and state handling. Users are debating the merits of different approaches like Terragrunt versus native workspaces.",
+      "theme_id": "custom-metrics-in-hpa-b31f5141",
+      "theme_label": "Custom metrics in HPA",
+      "description": "Users often struggle with configuring Horizontal Pod Autoscaler (HPA) to work with custom metrics. The community is looking for troubleshooting tips and best practices to ensure proper functionality.",
+      "pain_point_type": "incident",
+      "example_question_phrases": [
+        "Why is HPA not fetching metrics?",
+        "How to troubleshoot custom metrics in HPA?",
+        "What are common issues with HPA metrics?",
+        "Best practices for HPA configuration?"
+      ],
+      "confidence": 0.7,
+      "source_post_ids": [],
+      "subreddits": [],
+      "taxonomy_version": "20260410T180604Z",
+      "prompt_hash": "6d1429dfe85de80a"
+    },
+    {
+      "theme_id": "terraform-workspace-management-d680970d",
+      "theme_label": "Terraform workspace management",
+      "description": "Managing multiple AWS accounts with Terraform can be complex, leading to debates over the use of Terragrunt versus native workspaces. Users seek clarity on the best approach for their scenarios.",
       "pain_point_type": "process",
       "example_question_phrases": [
-        "Terragrunt vs native workspaces?",
-        "How to manage dependencies in Terraform?",
-        "What is the best approach for multi-account setups?",
-        "How to avoid state coupling in Terraform?"
+        "Terragrunt vs workspaces for AWS?",
+        "How to manage multiple accounts with Terraform?",
+        "What are the pros and cons of each approach?",
+        "Best practices for multi-account Terraform?"
+      ],
+      "confidence": 0.75,
+      "source_post_ids": [],
+      "subreddits": [],
+      "taxonomy_version": "20260410T180604Z",
+      "prompt_hash": "6d1429dfe85de80a"
+    },
+    {
+      "theme_id": "eks-upgrade-challenges-030dce76",
+      "theme_label": "EKS upgrade challenges",
+      "description": "Upgrading EKS versions often leads to issues that teams want to avoid. Users are looking for checklists and shared experiences to navigate these upgrades smoothly.",
+      "pain_point_type": "incident",
+      "example_question_phrases": [
+        "What breaks during EKS upgrades?",
+        "How to prepare for EKS version changes?",
+        "Best practices for EKS upgrade playbooks?",
+        "What to check before upgrading EKS?"
       ],
       "confidence": 0.8,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "eks-upgrade-challenges-83b03db8",
-      "theme_label": "EKS Upgrade Challenges",
-      "description": "Upgrading EKS versions often leads to issues with compatibility and deprecated APIs. Users seek shared experiences and checklists to navigate these upgrades successfully.",
-      "pain_point_type": "incident",
-      "example_question_phrases": [
-        "What breaks during EKS upgrades?",
-        "How to prepare for EKS upgrades?",
-        "What tools help with EKS compatibility?",
-        "What are common pitfalls in EKS upgrades?"
-      ],
-      "confidence": 0.85,
-      "source_post_ids": [],
-      "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
-      "prompt_hash": "6d1429dfe85de80a"
-    },
-    {
-      "theme_id": "docker-compose-vs-kubernetes-f9c4066b",
+      "theme_id": "docker-compose-vs-kubernetes-8ed492e6",
       "theme_label": "Docker Compose vs Kubernetes",
-      "description": "Debates arise over the appropriateness of using Docker Compose versus Kubernetes for internal tools, with users weighing the trade-offs of complexity and capability.",
+      "description": "Debates arise over when to use Docker Compose versus Kubernetes for internal tools. Users seek guidance on capacity planning and the right tool for their needs.",
       "pain_point_type": "architecture",
       "example_question_phrases": [
         "When is Docker Compose enough?",
         "What are the limits of Docker Compose?",
         "How to decide between Compose and Kubernetes?",
-        "What are the scaling considerations?"
+        "Best practices for internal tool deployment?"
       ],
       "confidence": 0.75,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     },
     {
-      "theme_id": "measuring-dora-metrics-f16cabad",
-      "theme_label": "Measuring DORA Metrics",
-      "description": "Organizations struggle with accurately measuring DORA metrics due to messy data sources. Users are looking for realistic approaches to track deployment frequency and incident response times.",
+      "theme_id": "dora-metrics-measurement-2ff6c8df",
+      "theme_label": "DORA metrics measurement",
+      "description": "Measuring DORA metrics accurately is a challenge for many teams, especially with messy data. Users are looking for realistic approaches to track these metrics effectively.",
       "pain_point_type": "process",
       "example_question_phrases": [
         "What DORA metrics should we track?",
-        "How to clean up data for metrics?",
-        "What tools help with DORA measurement?",
-        "How to start measuring deployment frequency?"
+        "How to clean up data for DORA metrics?",
+        "Best practices for measuring MTTR?",
+        "What tools help with DORA metrics?"
       ],
-      "confidence": 0.8,
+      "confidence": 0.7,
       "source_post_ids": [],
       "subreddits": [],
-      "taxonomy_version": "20260406T211357Z",
+      "taxonomy_version": "20260410T180604Z",
       "prompt_hash": "6d1429dfe85de80a"
     }
   ]

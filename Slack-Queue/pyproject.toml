@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opsera-slack"
+version = "0.1.0"
+description = "Opsera Slack queue: approve/reject Reddit comment drafts via Slack and web GUI"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "jinja2>=3.1",
+  "python-multipart>=0.0.9",
+  "slack-sdk>=3.27",
+  "pydantic>=2",
+  "pydantic-settings>=2",
+  "python-dotenv>=1.0",
+]
+
+[project.scripts]
+opsera-slack-serve = "opsera_slack.app:serve"
+opsera-slack-send  = "opsera_slack.sender:send_cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+opsera_slack = ["templates/*.html"]

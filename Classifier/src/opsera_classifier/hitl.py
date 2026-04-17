@@ -156,6 +156,14 @@ def run_hitl(
         encoding="utf-8",
     )
     print(f"\nAction plan written to {out}")
+
+    # Push a copy into the pending queue for the Generator to pick up
+    from .queue import push_to_queue
+
+    queue_dir = out.parent / "action_plan_queue"
+    queued = push_to_queue(out, queue_dir)
+    print(f"Queued for generation → {queued}")
+
     return 0
 
 

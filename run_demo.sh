@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full pipeline demo: Reddit KB → themes → embed → candidates → Opsera HITL
+# Full pipeline demo: Reddit KB → themes → embed → candidates → Opsera HITL → Generator → Slack Queue
 # Run from: Reddit-Devops-Agent/
 #   chmod +x run_demo.sh && ./run_demo.sh
 
@@ -8,6 +8,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KB_DIR="$SCRIPT_DIR/KB"
 CLASSIFIER_DIR="$SCRIPT_DIR/Classifier"
+GENERATOR_DIR="$SCRIPT_DIR/Generator"
+SLACK_QUEUE_DIR="$SCRIPT_DIR/Slack-Queue"
 
 PYTHON="/Users/rahulnadkarni/.pyenv/versions/3.10.15/bin/python3"
 KB_PYTHON="$PYTHON"
@@ -108,4 +110,40 @@ for i, c in enumerate(plan["selected_candidates"]):
 EOF
 
 echo "  Full plan → Classifier/action_plan.json"
+echo
+
+# ── Stage 9: Generator — draft Reddit comments ───────────────────────────────
+
+header "Stage 9 — Generate Reddit comments  (opsera-generate)"
+echo "  Reading pending action plans from Classifier queue..."
+echo "  Drafting one comment per selected candidate via LLM..."
+echo
+
+cd "$GENERATOR_DIR"
+"$PYTHON" -m opsera_generator.cli \
+  --inbox "$CLASSIFIER_DIR/action_plan_queue/pending" \
+  --slack-queue "$SLACK_QUEUE_DIR/queue.json"
+cd "$SCRIPT_DIR"
+
+# ── Stage 10: Show Slack queue ────────────────────────────────────────────────
+
+header "Stage 10 — Comment drafts pushed to Slack Queue"
+"$PYTHON" - <<'EOF'
+import json
+from pathlib import Path
+queue_path = Path("Slack-Queue/queue.json")
+if not queue_path.exists():
+    print("  No queue file yet.")
+else:
+    items = json.loads(queue_path.read_text())
+    print(f"  {len(items)} item(s) in Slack-Queue/queue.json\n")
+    for item in items[-3:]:
+        print(f"  [{item['area']:15}]  {item['theme_id']}")
+        print(f"  status={item['status']}  similarity={item['similarity']:.3f}")
+        print(f"  ---")
+        print(f"  {item['comment_draft'][:250]}...")
+        print()
+EOF
+
+echo "  Full queue → Slack-Queue/queue.json"
 echo
