@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 from .models import SlackQueueItem
-from .store import get_next_pending, update_item_status
+from .store import get_last_sent_at, get_next_pending, update_item_status
 
 if TYPE_CHECKING:
     from .settings import Settings
@@ -128,11 +129,31 @@ def build_response_modal(item: SlackQueueItem) -> dict:
 
 
 def send_next_to_slack(settings: "Settings") -> SlackQueueItem | None:
-    """Pull the oldest pending item, send it to Slack, and mark it as in-flight."""
+    """Pull the oldest pending item, send it to Slack, and mark it as in-flight.
+
+    Returns None (silently) if:
+    - No pending items exist
+    - An item is already in-flight
+    - The rate limit (min_send_interval_minutes) has not elapsed since the last send
+    """
     item = get_next_pending(settings.queue_path)
     if not item:
-        log.info("No pending item to send")
+        log.debug("No pending item to send")
         return None
+
+    # Rate-limit check: must wait min_send_interval_minutes since last dispatch
+    min_interval = getattr(settings, "min_send_interval_minutes", 15)
+    last_sent = get_last_sent_at(settings.queue_path)
+    if last_sent is not None:
+        elapsed_seconds = (datetime.now(timezone.utc) - last_sent).total_seconds()
+        required_seconds = min_interval * 60
+        if elapsed_seconds < required_seconds:
+            remaining = int((required_seconds - elapsed_seconds) / 60)
+            log.info(
+                "Rate-limited: %dm remaining before next send (interval=%dm)",
+                remaining, min_interval,
+            )
+            return None
 
     client = WebClient(token=settings.slack_bot_token)
     try:

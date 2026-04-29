@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     host: str = Field(default="127.0.0.1", alias="HOST")
     port: int = Field(default=8080, alias="PORT")
+    min_send_interval_minutes: int = Field(default=15, alias="MIN_SEND_INTERVAL_MINUTES")
 
     @property
     def slack_configured(self) -> bool:

@@ -1,9 +1,11 @@
 """FastAPI application: GUI dashboard + REST API + Slack interactive webhook."""
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import urllib.parse
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -19,6 +21,7 @@ from .sender import send_next_to_slack
 from .settings import Settings
 from .store import (
     get_item,
+    get_last_sent_at,
     load_queue,
     queue_stats,
     submit_human_response,
@@ -35,7 +38,46 @@ _templates_dir = Path(__file__).parent / "templates"
 templates = Jinja2Templates(directory=str(_templates_dir))
 
 
+# ── Background watcher ────────────────────────────────────────────────────────
+
+async def _queue_watcher() -> None:
+    """Poll queue every 60 s and auto-dispatch the next pending item to Slack."""
+    await asyncio.sleep(5)  # short initial delay to let the server finish starting
+    while True:
+        try:
+            if settings.slack_configured:
+                send_next_to_slack(settings)
+        except Exception as e:
+            log.error("Watcher error: %s", e)
+        await asyncio.sleep(60)
+
+
+@app.on_event("startup")
+async def start_watcher() -> None:
+    asyncio.create_task(_queue_watcher())
+    log.info("Queue watcher started (poll interval: 60s, rate limit: %dm)", settings.min_send_interval_minutes)
+
+
 # ── GUI routes ────────────────────────────────────────────────────────────────
+
+def _queue_status_label(queue_path: Path, min_interval_minutes: int) -> str:
+    """Human-readable status for the dashboard header."""
+    from .store import load_queue as lq
+    items = lq(queue_path)
+    in_flight = any(i.status == "sent_to_slack" for i in items)
+    if in_flight:
+        return "Waiting for action in Slack"
+    pending_count = sum(1 for i in items if i.status == "pending")
+    if pending_count == 0:
+        return "Queue empty"
+    last_sent = get_last_sent_at(queue_path)
+    if last_sent:
+        elapsed = (datetime.now(timezone.utc) - last_sent).total_seconds()
+        remaining = max(0, int((min_interval_minutes * 60 - elapsed) / 60))
+        if remaining > 0:
+            return f"Next send in ~{remaining}m"
+    return f"{pending_count} item(s) ready — sending soon"
+
 
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request, tab: str = "pending"):
@@ -44,6 +86,7 @@ async def dashboard(request: Request, tab: str = "pending"):
     pending = [i for i in items if i.status == "pending"]
     sent = [i for i in items if i.status == "sent_to_slack"]
     history = list(reversed([i for i in items if i.status in ("approved", "rejected")]))
+    status_label = _queue_status_label(settings.queue_path, settings.min_send_interval_minutes)
     return templates.TemplateResponse(
         "dashboard.html",
         {
@@ -54,6 +97,7 @@ async def dashboard(request: Request, tab: str = "pending"):
             "history": history,
             "stats": stats,
             "slack_configured": settings.slack_configured,
+            "queue_status_label": status_label,
         },
     )
 
@@ -83,7 +127,10 @@ class SubmitResponse(BaseModel):
 @app.post("/api/items/{item_id}/approve")
 async def approve_item(item_id: str, body: SubmitResponse):
     if not body.human_response.strip():
-        raise HTTPException(status_code=400, detail="human_response cannot be empty — write your own comment before approving")
+        raise HTTPException(
+            status_code=400,
+            detail="human_response cannot be empty — write your own comment before approving",
+        )
     try:
         updated = submit_human_response(settings.queue_path, item_id, body.human_response)
     except ValueError as e:
@@ -101,22 +148,26 @@ async def reject_item(item_id: str):
     return {"status": "rejected", "item_id": item_id}
 
 
-@app.post("/api/send-next")
-async def api_send_next():
+@app.post("/api/internal/trigger")
+async def internal_trigger():
+    """Internal endpoint for the Generator to nudge the watcher immediately after writing to queue."""
     if not settings.slack_configured:
-        raise HTTPException(
-            status_code=400,
-            detail="Slack not configured. Set SLACK_BOT_TOKEN, SLACK_CHANNEL_ID, and SLACK_SIGNING_SECRET in .env",
-        )
+        return {"triggered": False, "reason": "Slack not configured"}
     item = send_next_to_slack(settings)
-    if not item:
-        return {"sent": False, "message": "No pending items or one is already in-flight"}
-    return {"sent": True, "item_id": item.item_id, "theme_id": item.theme_id}
+    if item:
+        return {"triggered": True, "item_id": item.item_id}
+    return {"triggered": False, "reason": "Rate-limited, in-flight, or no pending items"}
 
 
 @app.get("/api/stats")
 async def api_stats():
-    return queue_stats(settings.queue_path)
+    stats = queue_stats(settings.queue_path)
+    last_sent = get_last_sent_at(settings.queue_path)
+    return {
+        **stats,
+        "queue_status": _queue_status_label(settings.queue_path, settings.min_send_interval_minutes),
+        "last_sent_at": last_sent.isoformat() if last_sent else None,
+    }
 
 
 # ── Slack interactive webhook ─────────────────────────────────────────────────
@@ -128,7 +179,9 @@ async def slack_actions(request: Request):
     if settings.slack_signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp", "0")
         signature = request.headers.get("X-Slack-Signature", "")
-        if not verify_slack_signature(settings.slack_signing_secret, body_bytes, timestamp, signature):
+        if not verify_slack_signature(
+            settings.slack_signing_secret, body_bytes, timestamp, signature
+        ):
             raise HTTPException(status_code=403, detail="Invalid Slack signature")
 
     body_str = body_bytes.decode("utf-8")
@@ -154,5 +207,6 @@ def serve() -> None:
         print(f"  Slack: not configured (GUI-only mode)")
     else:
         print(f"  Slack: configured — channel {settings.slack_channel_id}")
+        print(f"  Rate limit: {settings.min_send_interval_minutes}m between sends")
     print()
     uvicorn.run(app, host=settings.host, port=settings.port, log_level="warning")

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .models import ItemStatus, SlackQueueItem
@@ -40,12 +41,26 @@ def update_item_status(path: Path, item_id: str, status: ItemStatus) -> SlackQue
     items = load_queue(path)
     for i, item in enumerate(items):
         if item.item_id == item_id:
-            items[i] = item.model_copy(update={"status": status})
+            updates: dict = {"status": status}
+            if status == "sent_to_slack":
+                updates["sent_at"] = datetime.now(timezone.utc)
+            items[i] = item.model_copy(update=updates)
             save_queue(path, items)
             log.info("Item %s → %s", item_id, status)
             return items[i]
     log.warning("Item %s not found in queue", item_id)
     return None
+
+
+def get_last_sent_at(path: Path) -> datetime | None:
+    """Return the most recent sent_at timestamp across all dispatched items."""
+    items = load_queue(path)
+    sent_times = [
+        item.sent_at
+        for item in items
+        if item.sent_at is not None
+    ]
+    return max(sent_times) if sent_times else None
 
 
 def submit_human_response(

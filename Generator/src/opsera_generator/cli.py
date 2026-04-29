@@ -9,6 +9,9 @@ import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.request import Request as URLRequest
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from .generate import generate_comment
 from .models import SlackQueueItem
@@ -95,7 +98,27 @@ def run_generator(
         log.info("Moved %s → processed/", plan_path.name)
 
     print(f"\n{total_items} comment drafts written to {slack_queue_path}")
+
+    if total_items > 0:
+        _nudge_slack_server()
+
     return 0
+
+
+def _nudge_slack_server(host: str = "127.0.0.1", port: int = 8080) -> None:
+    """Tell the Slack dashboard server to try dispatching the next item immediately."""
+    url = f"http://{host}:{port}/api/internal/trigger"
+    try:
+        req = URLRequest(url, data=b"", method="POST")
+        req.add_header("Content-Type", "application/json")
+        with urlopen(req, timeout=5) as resp:
+            body = json.loads(resp.read())
+            if body.get("triggered"):
+                print(f"  Slack: dispatched item {body.get('item_id', '')[:8]} immediately")
+            else:
+                print(f"  Slack: {body.get('reason', 'watcher will pick it up within 60s')}")
+    except URLError:
+        log.debug("Slack server not reachable at %s — watcher will dispatch within 60s", url)
 
 
 def main() -> None:

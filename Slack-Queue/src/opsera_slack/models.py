@@ -35,6 +35,7 @@ class SlackQueueItem(BaseModel):
     area: str
     similarity: float
     generated_at: datetime
+    sent_at: datetime | None = None   # stamped when dispatched to Slack; used for rate-limiting
     status: ItemStatus = "pending"
 
     def area_label(self) -> str:
