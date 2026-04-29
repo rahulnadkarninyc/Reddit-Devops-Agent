@@ -1,300 +1,330 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Opsera Comment Queue</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { opsera: { DEFAULT: '#4f46e5', dark: '#3730a3' } } } }
-    }
-  </script>
-  <style>
-    .tab-btn.active   { border-bottom: 3px solid #4f46e5; color: #4f46e5; font-weight: 600; }
-    .tab-panel        { display: none; }
-    .tab-panel.active { display: block; }
-    textarea          { resize: vertical; }
-  </style>
-</head>
-<body class="bg-gray-50 min-h-screen font-sans">
-
-{# ── Macros ─────────────────────────────────────────────────────────────────── #}
-
 {% macro area_badge(area) %}
   {% set colors = {
-    'pipelines':    'bg-blue-100 text-blue-800',
-    'dora_metrics': 'bg-purple-100 text-purple-800',
-    'integrations': 'bg-teal-100 text-teal-800',
-    'security':     'bg-red-100 text-red-800',
-    'analytics':    'bg-orange-100 text-orange-800',
-    'general':      'bg-gray-100 text-gray-700'
+    "platform_engineering": "bg-blue-100 text-blue-800",
+    "ai_devops": "bg-purple-100 text-purple-800",
+    "compliance": "bg-green-100 text-green-800",
+    "developer_experience": "bg-yellow-100 text-yellow-800",
+    "general": "bg-gray-100 text-gray-700"
   } %}
-  {% set labels = {
-    'pipelines': 'Pipelines', 'dora_metrics': 'DORA Metrics',
-    'integrations': 'Integrations', 'security': 'Security',
-    'analytics': 'Analytics', 'general': 'General'
+  {% set label = {
+    "platform_engineering": "Platform Engineering",
+    "ai_devops": "AI DevOps",
+    "compliance": "Compliance",
+    "developer_experience": "Dev Experience",
+    "general": "General"
   } %}
-  <span class="{{ colors.get(area, 'bg-gray-100 text-gray-700') }} text-xs font-semibold px-2.5 py-1 rounded-full">
-    {{ labels.get(area, area.replace('_',' ').title()) }}
+  <span class="inline-block px-2 py-0.5 rounded text-xs font-medium {{ colors.get(area, 'bg-gray-100 text-gray-700') }}">
+    {{ label.get(area, area) }}
   </span>
 {% endmacro %}
 
 {% macro status_badge(status) %}
   {% set colors = {
-    'pending':       'bg-blue-50 text-blue-700',
-    'sent_to_slack': 'bg-yellow-50 text-yellow-800',
-    'approved':      'bg-green-50 text-green-700',
-    'rejected':      'bg-red-50 text-red-700'
+    "pending": "bg-amber-100 text-amber-800",
+    "sent_to_slack": "bg-blue-100 text-blue-800",
+    "approved": "bg-green-100 text-green-800",
+    "rejected": "bg-red-100 text-red-800"
   } %}
-  <span class="{{ colors.get(status, 'bg-gray-100 text-gray-600') }} text-xs font-medium px-2.5 py-1 rounded-full">
-    {{ status.replace('_', ' ') }}
+  {% set labels = {
+    "pending": "Pending",
+    "sent_to_slack": "Sent to Slack",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  } %}
+  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold {{ colors.get(status, 'bg-gray-100 text-gray-700') }}">
+    {{ labels.get(status, status) }}
   </span>
 {% endmacro %}
 
-{% macro empty_state(title, desc) %}
-<div class="text-center py-20">
-  <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-    </svg>
-  </div>
-  <h3 class="text-sm font-semibold text-gray-900 mb-1">{{ title }}</h3>
-  <p class="text-sm text-gray-500 max-w-xs mx-auto">{{ desc }}</p>
-</div>
-{% endmacro %}
-
-{% macro item_card(item, editable) %}
-<div id="card-{{ item.item_id }}" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-
-  {# Card header #}
-  <div class="px-6 py-4 border-b border-gray-100 flex items-start justify-between gap-4">
-    <div class="flex-1 min-w-0">
-      <div class="flex items-center gap-2 mb-1 flex-wrap">
-        {{ area_badge(item.area) }}
-        {{ status_badge(item.status) }}
-        <span class="text-xs text-gray-400">{{ (item.similarity * 100)|int }}% relevance</span>
-      </div>
-      <p class="text-xs text-gray-400 font-mono mt-1 truncate">{{ item.theme_id }}</p>
+{% macro item_card(item, show_actions=True) %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" id="card-{{ item.item_id }}">
+  {# Header bar #}
+  <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+    <div class="flex items-center gap-2">
+      {{ area_badge(item.area) }}
+      {{ status_badge(item.status) }}
+      <span class="text-xs text-gray-400">{{ item.generated_at.strftime('%b %d %H:%M') if item.generated_at else '' }}</span>
     </div>
-    <span class="text-xs text-gray-400 whitespace-nowrap mt-1">
-      {{ item.generated_at.strftime('%b %d, %H:%M') }}
-    </span>
+    <div class="text-xs text-gray-400 font-mono">{{ item.item_id[:8] }}…</div>
   </div>
 
-  {# Theme text #}
-  <div class="px-6 pt-4">
-    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Reddit Theme</p>
-    <p class="text-sm text-gray-600 leading-relaxed">
-      {{ item.theme_text[:200] }}{% if item.theme_text|length > 200 %}...{% endif %}
-    </p>
-  </div>
+  <div class="p-4 space-y-4">
+    {# Theme #}
+    <div>
+      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Reddit Thread Theme</p>
+      <p class="text-sm text-gray-700">{{ item.theme_text }}</p>
+      <p class="text-xs text-gray-400 mt-1">Similarity: {{ "%.0f%%"|format(item.similarity * 100) }}</p>
+    </div>
 
-  {# Comment draft #}
-  <div class="px-6 pt-4 pb-2">
-    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Proposed Comment</p>
-    {% if editable %}
-    <textarea id="draft-{{ item.item_id }}"
-      class="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
-      rows="7">{{ item.comment_draft }}</textarea>
-    {% else %}
-    <p class="text-sm text-gray-800 leading-relaxed bg-gray-50 rounded-lg p-3 whitespace-pre-wrap">{{ item.comment_draft }}</p>
+    {# AI Suggestion — read-only reference #}
+    <div class="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-3">
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">AI Suggestion — for reference only</p>
+        {% if show_actions %}
+        <button
+          type="button"
+          onclick="copyAiSuggestion('{{ item.item_id }}')"
+          class="text-xs text-indigo-500 hover:text-indigo-700 underline"
+          title="Copy AI text into your response box (you can then edit it)">
+          Copy to my response ↓
+        </button>
+        {% endif %}
+      </div>
+      <textarea
+        id="ai-draft-{{ item.item_id }}"
+        readonly
+        class="w-full text-sm text-gray-500 bg-transparent border-none resize-none focus:outline-none cursor-default"
+        rows="5"
+        >{{ item.comment_draft }}</textarea>
+    </div>
+
+    {% if show_actions %}
+    {# Human response panel (blank — human must write from scratch) #}
+    <div class="rounded-lg border border-gray-300 bg-white p-3">
+      <p class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
+        Your Response <span class="text-red-500">*</span>
+      </p>
+      <textarea
+        id="human-response-{{ item.item_id }}"
+        oninput="onHumanInput('{{ item.item_id }}')"
+        placeholder="Write your own comment here — the AI suggestion is for reference only and will not be posted."
+        class="w-full text-sm text-gray-800 border border-gray-200 rounded p-2 resize-y focus:outline-none focus:ring-2 focus:ring-indigo-300 min-h-[120px]"
+        rows="5"
+        ></textarea>
+      <p class="text-xs text-gray-400 mt-1">This is what will be approved. The AI suggestion above will not be posted.</p>
+    </div>
+
+    {# Action buttons #}
+    <div class="flex gap-2 pt-1">
+      <button
+        id="approve-btn-{{ item.item_id }}"
+        onclick="approveItem('{{ item.item_id }}')"
+        disabled
+        class="flex-1 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 transition-all duration-150"
+        title="Write your response above to enable">
+        ✓ Approve
+      </button>
+      <button
+        onclick="rejectItem('{{ item.item_id }}')"
+        class="px-4 py-2 rounded-lg text-sm font-semibold bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors">
+        ✕ Reject
+      </button>
+    </div>
+    {% endif %}
+
+    {% if not show_actions %}
+    {# History view: show human_response prominently, AI draft collapsed #}
+    {% if item.human_response %}
+    <div class="rounded-lg border border-green-200 bg-green-50 p-3">
+      <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">Submitted Response</p>
+      <p class="text-sm text-green-900 whitespace-pre-wrap">{{ item.human_response }}</p>
+    </div>
+    {% endif %}
+    <details class="text-xs text-gray-400">
+      <summary class="cursor-pointer hover:text-gray-600">Show AI suggestion (reference)</summary>
+      <pre class="mt-2 whitespace-pre-wrap text-gray-400 text-xs bg-gray-50 p-2 rounded">{{ item.comment_draft }}</pre>
+    </details>
     {% endif %}
   </div>
-
-  {# Action buttons #}
-  {% if editable and item.status in ('pending', 'sent_to_slack') %}
-  <div class="px-6 py-4 flex items-center gap-3 flex-wrap">
-    <button onclick="saveEdit('{{ item.item_id }}')"
-      class="text-sm text-gray-600 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors font-medium">
-      Save edit
-    </button>
-    <div class="flex-1"></div>
-    <button onclick="rejectItem('{{ item.item_id }}')"
-      class="text-sm text-red-600 border border-red-200 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors font-medium">
-      Reject
-    </button>
-    <button onclick="approveItem('{{ item.item_id }}')"
-      class="text-sm bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition-colors font-medium">
-      Approve
-    </button>
-  </div>
-  {% elif item.status == 'approved' %}
-  <div class="px-6 py-3 bg-green-50 border-t border-green-100">
-    <p class="text-xs text-green-700 font-medium">Approved — ready for posting</p>
-  </div>
-  {% elif item.status == 'rejected' %}
-  <div class="px-6 py-3 bg-red-50 border-t border-red-100">
-    <p class="text-xs text-red-700 font-medium">Rejected</p>
-  </div>
-  {% endif %}
 </div>
 {% endmacro %}
 
-{# ── Nav ─────────────────────────────────────────────────────────────────────── #}
+{% macro empty_state(label) %}
+<div class="text-center py-16 text-gray-400">
+  <div class="text-5xl mb-4">📭</div>
+  <p class="text-lg font-medium">{{ label }}</p>
+</div>
+{% endmacro %}
 
-<nav class="bg-white border-b border-gray-200 sticky top-0 z-10">
-  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Opsera Comment Queue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [x-cloak] { display: none; }
+    .tab-active { border-bottom: 2px solid #4f46e5; color: #4f46e5; font-weight: 600; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+{# ── Toast notification ── #}
+<div id="toast" class="hidden fixed top-4 right-4 z-50 px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium max-w-xs transition-all"></div>
+
+{# ── Top bar ── #}
+<header class="bg-white shadow-sm sticky top-0 z-40">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">O</div>
-      <span class="font-semibold text-gray-900 text-lg">Reddit Comment Queue</span>
+      <span class="text-2xl">🤖</span>
+      <div>
+        <h1 class="text-base font-bold text-gray-900 leading-tight">Opsera Comment Queue</h1>
+        <p class="text-xs text-gray-500">Reddit outreach dashboard</p>
+      </div>
     </div>
-    <div class="flex items-center gap-4">
-      <div class="hidden sm:flex items-center gap-2 text-sm">
-        <span class="bg-blue-50 text-blue-700 rounded-full px-3 py-1 font-medium">{{ stats.pending }} pending</span>
-        <span class="bg-yellow-50 text-yellow-800 rounded-full px-3 py-1 font-medium">{{ stats.sent_to_slack }} in Slack</span>
-        <span class="bg-green-50 text-green-700 rounded-full px-3 py-1 font-medium">{{ stats.approved }} approved</span>
+    <div class="flex items-center gap-3">
+      <div class="flex gap-3 text-sm">
+        <span class="text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded">{{ stats.get('pending', 0) }} pending</span>
+        <span class="text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded">{{ stats.get('approved', 0) }} approved</span>
       </div>
       {% if slack_configured %}
-      <button onclick="sendNext()" id="send-btn"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-        </svg>
-        Send Next to Slack
+      <button onclick="sendNext()" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">
+        → Send to Slack
       </button>
-      {% else %}
-      <span class="text-xs text-gray-400 italic border border-gray-200 px-3 py-2 rounded-lg">Slack not configured</span>
       {% endif %}
     </div>
   </div>
-</nav>
-
-{# ── Toast ───────────────────────────────────────────────────────────────────── #}
-<div id="toast" class="hidden fixed top-20 right-6 z-50 text-white text-sm px-4 py-3 rounded-lg shadow-lg max-w-sm"></div>
-
-{# ── Main content ─────────────────────────────────────────────────────────────── #}
-<div class="max-w-6xl mx-auto px-6 py-8">
 
   {# Tabs #}
-  <div class="border-b border-gray-200 mb-6">
-    <div class="flex gap-0">
-      <button class="tab-btn px-5 py-3 text-sm text-gray-500 hover:text-gray-700 transition-colors {% if tab == 'pending' %}active{% endif %}"
-        onclick="switchTab(event, 'pending')">
-        Pending
-        <span class="ml-2 bg-blue-100 text-blue-700 text-xs font-medium px-2 py-0.5 rounded-full">{{ pending|length }}</span>
-      </button>
-      <button class="tab-btn px-5 py-3 text-sm text-gray-500 hover:text-gray-700 transition-colors {% if tab == 'sent' %}active{% endif %}"
-        onclick="switchTab(event, 'sent')">
-        Sent to Slack
-        <span class="ml-2 bg-yellow-100 text-yellow-700 text-xs font-medium px-2 py-0.5 rounded-full">{{ sent|length }}</span>
-      </button>
-      <button class="tab-btn px-5 py-3 text-sm text-gray-500 hover:text-gray-700 transition-colors {% if tab == 'history' %}active{% endif %}"
-        onclick="switchTab(event, 'history')">
-        History
-        <span class="ml-2 bg-gray-100 text-gray-600 text-xs font-medium px-2 py-0.5 rounded-full">{{ history|length }}</span>
-      </button>
-    </div>
+  <div class="max-w-5xl mx-auto px-4 flex border-t border-gray-100">
+    <button onclick="switchTab('pending')" id="tab-pending" class="px-4 py-2 text-sm mr-1 {{ 'tab-active' if tab == 'pending' else 'text-gray-500 hover:text-gray-700' }}">
+      Pending ({{ pending|length }})
+    </button>
+    <button onclick="switchTab('sent')" id="tab-sent" class="px-4 py-2 text-sm mr-1 {{ 'tab-active' if tab == 'sent' else 'text-gray-500 hover:text-gray-700' }}">
+      Sent to Slack ({{ sent|length }})
+    </button>
+    <button onclick="switchTab('history')" id="tab-history" class="px-4 py-2 text-sm {{ 'tab-active' if tab == 'history' else 'text-gray-500 hover:text-gray-700' }}">
+      History ({{ history|length }})
+    </button>
   </div>
+</header>
 
-  {# Pending panel #}
-  <div id="tab-pending" class="tab-panel {% if tab == 'pending' %}active{% endif %}">
+{# ── Main content ── #}
+<main class="max-w-5xl mx-auto px-4 py-6 space-y-4">
+
+  {# Pending tab #}
+  <div id="panel-pending" class="{{ '' if tab == 'pending' else 'hidden' }} space-y-4">
     {% if pending %}
-    <div class="space-y-4">
-      {% for item in pending %}{{ item_card(item, editable=True) }}{% endfor %}
-    </div>
+      {% for item in pending %}
+        {{ item_card(item, show_actions=True) }}
+      {% endfor %}
     {% else %}
-    {{ empty_state("No pending items", "All drafts have been reviewed. Run the pipeline to generate more.") }}
+      {{ empty_state("No pending items") }}
     {% endif %}
   </div>
 
-  {# Sent to Slack panel #}
-  <div id="tab-sent" class="tab-panel {% if tab == 'sent' %}active{% endif %}">
+  {# Sent to Slack tab #}
+  <div id="panel-sent" class="{{ '' if tab == 'sent' else 'hidden' }} space-y-4">
     {% if sent %}
-    <div class="space-y-4">
-      <p class="text-sm text-yellow-800 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3">
-        Waiting for approval in Slack. You can also approve or reject directly below.
-      </p>
-      {% for item in sent %}{{ item_card(item, editable=True) }}{% endfor %}
-    </div>
+      {% for item in sent %}
+        {{ item_card(item, show_actions=True) }}
+      {% endfor %}
     {% else %}
-    {{ empty_state("Nothing in Slack", "Click 'Send Next to Slack' in the top bar to send the next pending draft.") }}
+      {{ empty_state("Nothing sent to Slack yet") }}
     {% endif %}
   </div>
 
-  {# History panel #}
-  <div id="tab-history" class="tab-panel {% if tab == 'history' %}active{% endif %}">
+  {# History tab #}
+  <div id="panel-history" class="{{ '' if tab == 'history' else 'hidden' }} space-y-4">
     {% if history %}
-    <div class="space-y-4">
-      {% for item in history %}{{ item_card(item, editable=False) }}{% endfor %}
-    </div>
+      {% for item in history %}
+        {{ item_card(item, show_actions=False) }}
+      {% endfor %}
     {% else %}
-    {{ empty_state("No history yet", "Approved and rejected drafts will appear here.") }}
+      {{ empty_state("No history yet") }}
     {% endif %}
   </div>
 
-</div>
+</main>
 
 <script>
-  function showToast(msg, cls) {
-    const t = document.getElementById('toast');
-    t.className = `fixed top-20 right-6 z-50 ${cls || 'bg-gray-900'} text-white text-sm px-4 py-3 rounded-lg shadow-lg max-w-sm`;
-    t.textContent = msg;
-    t.classList.remove('hidden');
-    setTimeout(() => t.classList.add('hidden'), 3500);
+  // ── Tab switching ──────────────────────────────────────────────────────────
+  function switchTab(name) {
+    ['pending', 'sent', 'history'].forEach(t => {
+      document.getElementById('panel-' + t).classList.toggle('hidden', t !== name);
+      const btn = document.getElementById('tab-' + t);
+      btn.classList.toggle('tab-active', t === name);
+      btn.classList.toggle('text-gray-500', t !== name);
+      btn.classList.toggle('hover:text-gray-700', t !== name);
+    });
   }
 
-  function switchTab(event, name) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    event.currentTarget.classList.add('active');
+  // ── Toast ──────────────────────────────────────────────────────────────────
+  function toast(msg, ok = true) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `fixed top-4 right-4 z-50 px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium max-w-xs transition-all ${ok ? 'bg-green-600' : 'bg-red-600'}`;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 3500);
   }
 
-  async function api(method, path, body) {
+  // ── API helper ─────────────────────────────────────────────────────────────
+  async function api(method, url, body) {
     const opts = { method, headers: { 'Content-Type': 'application/json' } };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(path, opts);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(err.detail || res.statusText);
+    const r = await fetch(url, opts);
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ detail: r.statusText }));
+      throw new Error(err.detail || r.statusText);
     }
-    return res.json();
+    return r.json();
   }
 
+  // ── Human response input handler ───────────────────────────────────────────
+  function onHumanInput(id) {
+    const textarea = document.getElementById('human-response-' + id);
+    const btn = document.getElementById('approve-btn-' + id);
+    const hasText = textarea.value.trim().length > 0;
+    btn.disabled = !hasText;
+    if (hasText) {
+      btn.className = 'flex-1 px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 cursor-pointer transition-all duration-150';
+      btn.title = 'Click to approve and submit your response';
+    } else {
+      btn.className = 'flex-1 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 transition-all duration-150';
+      btn.title = 'Write your response above to enable';
+    }
+  }
+
+  // ── Copy AI suggestion to human textarea ───────────────────────────────────
+  function copyAiSuggestion(id) {
+    const aiText = document.getElementById('ai-draft-' + id).value;
+    const humanTextarea = document.getElementById('human-response-' + id);
+    if (humanTextarea) {
+      humanTextarea.value = aiText;
+      humanTextarea.focus();
+      // Trigger the input handler so the Approve button updates
+      onHumanInput(id);
+    }
+  }
+
+  // ── Approve ────────────────────────────────────────────────────────────────
   async function approveItem(id) {
+    const textarea = document.getElementById('human-response-' + id);
+    const text = textarea ? textarea.value.trim() : '';
+    if (!text) {
+      toast('Please write your response before approving.', false);
+      return;
+    }
     try {
-      await api('POST', `/api/items/${id}/approve`);
-      showToast('Approved!', 'bg-green-700');
+      await api('POST', `/api/items/${id}/approve`, { human_response: text });
+      toast('Comment approved!');
       setTimeout(() => location.reload(), 800);
-    } catch(e) { showToast('Error: ' + e.message, 'bg-red-700'); }
+    } catch (e) {
+      toast(e.message, false);
+    }
   }
 
+  // ── Reject ─────────────────────────────────────────────────────────────────
   async function rejectItem(id) {
-    if (!confirm('Reject this comment draft?')) return;
+    if (!confirm('Reject this comment? It will be moved to history.')) return;
     try {
       await api('POST', `/api/items/${id}/reject`);
-      showToast('Rejected.', 'bg-red-700');
+      toast('Comment rejected.');
       setTimeout(() => location.reload(), 800);
-    } catch(e) { showToast('Error: ' + e.message, 'bg-red-700'); }
+    } catch (e) {
+      toast(e.message, false);
+    }
   }
 
-  async function saveEdit(id) {
-    const el = document.getElementById('draft-' + id);
-    try {
-      await api('PATCH', `/api/items/${id}`, { comment_draft: el.value });
-      showToast('Draft saved.', 'bg-gray-700');
-    } catch(e) { showToast('Error: ' + e.message, 'bg-red-700'); }
-  }
-
+  // ── Send to Slack ──────────────────────────────────────────────────────────
   async function sendNext() {
-    const btn = document.getElementById('send-btn');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
     try {
-      const res = await api('POST', '/api/send-next');
-      if (res.sent) {
-        showToast('Sent to Slack: ' + res.theme_id, 'bg-indigo-600');
-        setTimeout(() => location.reload(), 1200);
-      } else {
-        showToast(res.message, 'bg-gray-700');
-      }
-    } catch(e) {
-      showToast('Error: ' + e.message, 'bg-red-700');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Send Next to Slack`;
+      const r = await api('POST', '/api/send-next');
+      toast(r.sent ? `Sent item ${r.item_id.slice(0,8)} to Slack` : r.message, r.sent);
+      if (r.sent) setTimeout(() => location.reload(), 800);
+    } catch (e) {
+      toast(e.message, false);
     }
   }
 </script>

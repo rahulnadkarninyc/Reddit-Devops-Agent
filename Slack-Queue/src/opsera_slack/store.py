@@ -48,13 +48,22 @@ def update_item_status(path: Path, item_id: str, status: ItemStatus) -> SlackQue
     return None
 
 
-def update_item_draft(path: Path, item_id: str, comment_draft: str) -> SlackQueueItem | None:
+def submit_human_response(
+    path: Path, item_id: str, human_response: str
+) -> SlackQueueItem | None:
+    """Save the human-written response and mark the item as approved."""
+    if not human_response.strip():
+        raise ValueError("human_response cannot be empty")
     items = load_queue(path)
     for i, item in enumerate(items):
         if item.item_id == item_id:
-            items[i] = item.model_copy(update={"comment_draft": comment_draft})
+            items[i] = item.model_copy(
+                update={"human_response": human_response, "status": "approved"}
+            )
             save_queue(path, items)
+            log.info("Item %s approved with human response (%d chars)", item_id, len(human_response))
             return items[i]
+    log.warning("Item %s not found in queue", item_id)
     return None
 
 

@@ -3,14 +3,13 @@ from __future__ import annotations
 
 import json
 import logging
-import sys
 import urllib.parse
 from pathlib import Path
 from typing import Optional
 
 import uvicorn
-from fastapi import FastAPI, Form, HTTPException, Request, Response
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -22,7 +21,7 @@ from .store import (
     get_item,
     load_queue,
     queue_stats,
-    update_item_draft,
+    submit_human_response,
     update_item_status,
 )
 
@@ -44,9 +43,7 @@ async def dashboard(request: Request, tab: str = "pending"):
     stats = queue_stats(settings.queue_path)
     pending = [i for i in items if i.status == "pending"]
     sent = [i for i in items if i.status == "sent_to_slack"]
-    history = [i for i in items if i.status in ("approved", "rejected")]
-    # newest first for history
-    history = list(reversed(history))
+    history = list(reversed([i for i in items if i.status in ("approved", "rejected")]))
     return templates.TemplateResponse(
         "dashboard.html",
         {
@@ -79,21 +76,18 @@ async def get_single_item(item_id: str):
     return json.loads(item.model_dump_json())
 
 
-class DraftUpdate(BaseModel):
-    comment_draft: str
-
-
-@app.patch("/api/items/{item_id}")
-async def edit_draft(item_id: str, body: DraftUpdate):
-    updated = update_item_draft(settings.queue_path, item_id, body.comment_draft)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return json.loads(updated.model_dump_json())
+class SubmitResponse(BaseModel):
+    human_response: str
 
 
 @app.post("/api/items/{item_id}/approve")
-async def approve_item(item_id: str):
-    updated = update_item_status(settings.queue_path, item_id, "approved")
+async def approve_item(item_id: str, body: SubmitResponse):
+    if not body.human_response.strip():
+        raise HTTPException(status_code=400, detail="human_response cannot be empty — write your own comment before approving")
+    try:
+        updated = submit_human_response(settings.queue_path, item_id, body.human_response)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     if not updated:
         raise HTTPException(status_code=404, detail="Item not found")
     return {"status": "approved", "item_id": item_id}
@@ -131,20 +125,17 @@ async def api_stats():
 async def slack_actions(request: Request):
     body_bytes = await request.body()
 
-    # Verify signature
     if settings.slack_signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp", "0")
         signature = request.headers.get("X-Slack-Signature", "")
         if not verify_slack_signature(settings.slack_signing_secret, body_bytes, timestamp, signature):
             raise HTTPException(status_code=403, detail="Invalid Slack signature")
 
-    # Slack sends payload as form-encoded
     body_str = body_bytes.decode("utf-8")
     parsed = urllib.parse.parse_qs(body_str)
     payload_str = parsed.get("payload", ["{}"])[0]
     payload = json.loads(payload_str)
 
-    # Handle in background (Slack expects 200 within 3s)
     try:
         handle_action(payload, settings)
     except Exception as e:

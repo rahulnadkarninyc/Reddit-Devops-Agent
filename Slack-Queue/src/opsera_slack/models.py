@@ -30,7 +30,8 @@ class SlackQueueItem(BaseModel):
     item_id: str
     theme_id: str
     theme_text: str
-    comment_draft: str
+    comment_draft: str           # AI-generated suggestion — read-only reference
+    human_response: str = ""     # written by the human reviewer; empty = not yet submitted
     area: str
     similarity: float
     generated_at: datetime
